@@ -29,24 +29,37 @@ export function ShoppingCartProvider({children}:props){
     
   function updateClientCart(client:Client,product:Product){
       setClientsCart(prev=>{
-        if(prev.length!==0){
-          const index =prev.findIndex(cart=>cart.client.id===client.id)
-          if(index!==-1){
-            prev[index].products.push(product)
-            return [...prev]
+        if(prev.length!==0){// se o vetor de carrinhos não estiver vazio
+          const clientIndex =prev.findIndex(cart=>cart.client.id===client.id)
+          if(clientIndex!==-1){ // se encontrou o carrinho do cliente
+            const productIndex=prev[clientIndex].products.findIndex(prod=>prod.id==product.id)//procura o produto no carrinho do cliente
+            if(productIndex===-1){// se não encontrou o produto no carrinho do cliente
+              prev[clientIndex].products.push(product)
+              return [...prev]
+            }else{// se encontrou o produto no carrinho do cliente
+             const previewProduct=prev[clientIndex].products[productIndex]
+             const listWhitOutCartClient=prev.filter(cart=>cart.client.id!==client.id)
+             const cartClientWhitoutProduct= prev[clientIndex].products.filter(prod=>prod.id!==product.id)
+             return [...listWhitOutCartClient,{
+                     client,
+                     products:[...cartClientWhitoutProduct,{
+                      ...previewProduct,
+                      amount: previewProduct.amount&&product.amount&&previewProduct.amount+product.amount
+                     }]
+             }]
+            }
           }
-          else
+          else // não encontrou o carrrinho do cliente
             return [...prev,{
               client,
               products:[product]
             }]
-        }else
-          return [...prev,{
+        }else // o vetor de carrinhos está vazio
+          return [{
             client,
             products:[product]
           }]
       })
-
   }
 
   function createSelectedClientCart(client:Client){

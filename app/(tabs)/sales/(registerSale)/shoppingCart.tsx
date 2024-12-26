@@ -55,17 +55,17 @@ const showToasts = (client:Client) => {
       })
     }
 
-    async function save(){
-      if(selectedClient && selectedClient.id){
-        await postSale(selectedClient.id,getSelectedClientCart().products)
-        refreshSaleListNow()
-        refreshProductListNow()
-        showToasts(selectedClient)
-        setSelectedClient(null)
-        setClientsCart([])
-        router.navigate("/(tabs)/sales")
-      }
-    }
+    // async function save(){
+    //   if(selectedClient && selectedClient.id){
+    //     await postSale(selectedClient.id,getSelectedClientCart().products)
+    //     refreshSaleListNow()
+    //     refreshProductListNow()
+    //     showToasts(selectedClient)
+    //     setSelectedClient(null)
+    //     setClientsCart([])
+    //     router.navigate("/(tabs)/sales")
+    //   }
+    // }
 
     return(
       <View style={styles.container}>
@@ -108,7 +108,7 @@ const showToasts = (client:Client) => {
         
       </View>}
     />
-    {filteredItens.length>0 ?<Button title="ir para o pagamento" onPress={()=>save()}/>:<Button title="adicionar produtos" onPress={()=>router.back()}/>}
+    {filteredItens.length>0 ?<Button title="ir para o pagamento" onPress={()=>router.navigate("/(tabs)/sales/(registerSale)/payment")}/>:<Button title="adicionar produtos" onPress={()=>router.back()}/>}
     </View>
     )
   }

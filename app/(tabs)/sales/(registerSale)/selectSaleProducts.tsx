@@ -1,4 +1,4 @@
-import {router, useLocalSearchParams } from 'expo-router';
+import {router } from 'expo-router';
 import { View, Text, StyleSheet, FlatList, Button, Modal, Pressable, Alert} from 'react-native';
 import { useEffect, useState, useContext } from 'react';
 import GlobalAppContext from '@/contexts/refreshListsContext';

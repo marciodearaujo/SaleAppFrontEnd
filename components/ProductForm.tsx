@@ -16,8 +16,8 @@ import Product from '@/models/Product';
 const productSchema = object({
   id:number(),
   description: string().required("A descrição do produto deve ser informada"),
-  price: number(),
-  amount:number(),
+  price: number().required(),
+  amount:number().required(),
   sex:string()
 });
 
@@ -42,6 +42,7 @@ export default function ProductForm({getFormData,submitButtonText,defValues}:Pro
     register('sex')
    !getValues("sex")&&setValue('sex','both')
    !getValues("amount")&&setValue('amount',0)
+   !getValues("price")&&setValue('price',0)
   },[])
 
  
