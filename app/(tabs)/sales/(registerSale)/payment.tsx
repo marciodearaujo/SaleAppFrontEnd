@@ -1,17 +1,18 @@
 import { postSale } from '@/backednAPIRequests/saleRequests'
+import ListNumberInput from '@/components/ListNumberInput'
 import RefreshListsContext from '@/contexts/refreshListsContext'
 import ShoppingCartContext, { Cart } from '@/contexts/shoppingCartContext'
 import { router } from 'expo-router'
 import { useContext, useState } from 'react'
-import {Button, Text, TextInput, View} from 'react-native'
+import {Button, Text, View} from 'react-native'
 import { CheckBox } from 'react-native-elements'
 
 export default function payment(){
     const {clientsCart,selectedClient,setSelectedClient,setClientsCart}= useContext(ShoppingCartContext)
-    const {refreshProductListNow,} = useContext(RefreshListsContext)
+    const {refreshProductListNow,refreshSaleListNow} = useContext(RefreshListsContext)
     const [paymentForm, setpaymentForm]= useState("à vista")
-    const [portionNumber, setPortionNumber]= useState(0)
-    const [portioPayDayLimit, setPortionPayDaylimit]= useState(1)
+    const [portionsNumber, setPortionNumber]= useState(0)
+    const [portionPayDayLimit, setPortionPayDaylimit]= useState(0)
 
     let totalValue=0
     let selectedClientCart:Cart
@@ -22,7 +23,7 @@ export default function payment(){
 
     async function save(){
       if(selectedClient && selectedClient.id){
-        await postSale(selectedClient.id,selectedClientCart.products)
+        await postSale(selectedClient.id,portionsNumber,portionPayDayLimit,selectedClientCart.products)
         refreshSaleListNow()
         refreshProductListNow()
         setSelectedClient(null)
@@ -54,13 +55,13 @@ export default function payment(){
             <View>
             {paymentForm==="parcelado"&&
             <View>
-            <Text>Numero de parcelas:</Text>
-            <TextInput onChangeText={(text)=>setPortionNumber(parseInt(text))}/>
+            <Text>Número de parcelas:</Text>
+            <ListNumberInput getNumber={setPortionNumber} MaxNumber={12} modalTitle='Selecione o número de parcelas' placeholder=''/>
             <Text>Dia de vencimento:</Text>
-            <TextInput onChangeText={(text)=>setPortionPayDaylimit(parseInt(text))}/>
+            <ListNumberInput getNumber={setPortionPayDaylimit} MaxNumber={10} modalTitle='Selecione o dia do vencimento' placeholder=''/>
             </View>}
             </View>
-            <Button title='concluir venda' onPress={()=>save}/>   
+            {(portionsNumber!==0&&portionPayDayLimit!==0||paymentForm==="à vista")&&<Button title='concluir venda' onPress={()=>save()}/>}  
         </View>
     )
 
@@ -68,7 +69,3 @@ export default function payment(){
 
 
 
-function refreshSaleListNow() {
-    throw new Error('Function not implemented.')
-}
-        

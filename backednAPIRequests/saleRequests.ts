@@ -7,12 +7,15 @@ const  url="https://saleapp.eletrodev.com/sales"
 
 
 
-export async function postSale(clientId:number,products:Product[]){
+export async function postSale(clientId:number,portionsNumber:number,portionPayDayLimit:number,products:Product[]){
     try{
+
         await fetch(url+"/items",{
             method:"post",
             body: JSON.stringify({
               saleDate:new Date().toISOString(),
+              portionsNumber,
+              portionPayDayLimit,
               clientId,
               products
             }),
