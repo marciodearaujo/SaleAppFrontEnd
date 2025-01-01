@@ -1,4 +1,5 @@
 import Item from "@/models/Item";
+import PaymentPortion from "@/models/paymentPortion";
 import Product from "@/models/Product";
 import SaleClient from "@/models/SaleClient";
 
@@ -39,6 +40,18 @@ export async function getSaleClient():Promise<SaleClient[]>{
         console.log(error)
         throw error
     }
+}
+
+export async function getSalePotions(saleId:number):Promise<PaymentPortion[]>{
+  try{
+      const paymentPortions= await fetch(url+"/"+saleId+"/payment-portions",{
+          method:"get"
+        })
+        return await paymentPortions.json()
+  }catch(error){
+      console.log(error)
+      throw error
+  }
 }
 
 export async function removeSale(id:number){

@@ -11,8 +11,7 @@ import { getSaleClient, removeSale } from '@/backednAPIRequests/saleRequests';
 
 
 
-//This variable define basic url to sales resources
-export const  url="http://34.232.74.209:3001/sales"
+
 
 const confirmRemoveAlert = ()=>{
   return new Promise<boolean>((resolve,reject)=>{
@@ -95,13 +94,15 @@ export default function salesScreenList() {
                 params:{
                   id:item.id,
                   saleDate:item.saleDate,
-                  clientName:item.client.name
+                  clientName:item.client.name,
+                  total:item.total
                 }
               } 
               }>
                 <View style={styles.item}>
-                  <Text style={styles.dateText}>Data: {new Date(item.saleDate).toLocaleDateString("pt-br")}</Text> 
-                  <Text style={styles.clientText}>{item.client.name}</Text>   
+                  <Text style={styles.dateText}>{new Date(item.saleDate).toLocaleDateString("pt-br")}</Text> 
+                  <Text style={styles.clientText}>{item.client.name}</Text>  
+                  <Text style={styles.clientText}>{item.status==="paid"?"Quitada":"Em débito"}</Text> 
                 </View>
                 
               </Link>
@@ -151,7 +152,7 @@ items:{
   borderBottomWidth:1
 },
 item:{
-  width:"60%"
+  width:"60%",
 },
 clientText:{
   fontSize:15,

@@ -6,19 +6,22 @@ import SaleDetails from "@/components/SaleDetails"
 import Item from "@/models/Item";
 import Product from "@/models/Product";
 import { getProducts } from "@/backednAPIRequests/productRequests";
-import { getSaleItems } from "@/backednAPIRequests/saleRequests";
+import { getSaleItems, getSalePotions } from "@/backednAPIRequests/saleRequests";
 import { narrowingToString } from "@/utils/utilsFunctions";
+import paymentPortion from "@/models/paymentPortion";
 
 
 export default function DescribeSale(){
     const {refreshSaleList,refreshProductList}=useContext(RefreshListsContext)
     const [saleItems,setSaleItems]=useState<Array<Item> | null>(null)
     const [products,setProducts]=useState<Array<Product> | null>(null)
+    const [paymentPortions,setPaymentPortions]=useState<Array<paymentPortion> | null>(null)
 
     
     const saleId=narrowingToString(useLocalSearchParams().id)
     const saleDate=narrowingToString(useLocalSearchParams().saleDate)
     const clientName=narrowingToString(useLocalSearchParams().clientName)
+    const saleValue=narrowingToString(useLocalSearchParams().total)
 
     
   
@@ -26,6 +29,7 @@ export default function DescribeSale(){
     useEffect(()=>{
         setProductsList()
         setSaleItemsList()
+        setPaymentPortionsList()
     },[refreshSaleList,refreshProductList])
 
 
@@ -39,16 +43,18 @@ export default function DescribeSale(){
       const saleItems= await getSaleItems(parseInt(saleId))
       setSaleItems(saleItems)
     }
+
+    async function setPaymentPortionsList(){
+        const paymentPortions= await getSalePotions(parseInt(saleId))
+        setPaymentPortions(paymentPortions)
+      }
     
   
    
   
     return(
         <View style={styles.container}>
-            <SaleDetails saleDate={saleDate} clientName={clientName} saleItems={saleItems} products={products}/>
-            <View style={styles.actionBar}>
-                <Button onPress={()=>router.back()} title="voltar"/>
-            </View>    
+            <SaleDetails value={parseInt(saleValue)} saleDate={saleDate} clientName={clientName} saleItems={saleItems} products={products} paymentPortions={paymentPortions}/>
         </View>
     )
 
